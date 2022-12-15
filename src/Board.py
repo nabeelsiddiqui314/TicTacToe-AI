@@ -9,9 +9,42 @@ class Cell(enum.Enum):
 class Board:
     def __init__(self):
         self.cells = [Cell.EMPTY] * 9
+        self.lines = []
+        self.turn = Cell.X
+
+        self.initLines()
+
+    def initLines(self):
+        rows = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+        columns = [[0, 3, 6], [1, 4, 7], [2, 5, 8]]
+        diagonals = [[0, 4, 8], [2, 4, 6]]
+
+        self.lines.extend(rows)
+        self.lines.extend(columns)
+        self.lines.extend(diagonals)
+
+    def setCell(self, index, cell):
+        self.cells[index] = cell
 
     def getCell(self, index):
         return self.cells[index]
+
+    def checkLine(self, line, cell):
+        return all(self.cells[index] == cell for index in line)
+
+    def isWinner(self, player):
+        return any(self.checkLine(line, player) for line in self.lines)
+
+    def getEmptyCellCount(self):
+        return self.cells.count(Cell.EMPTY)
+
+    def isGameOver(self):
+        return self.isWinner(Cell.X) or self.isWinner(Cell.O) or self.getEmptyCellCount() == 0
+
+    def playNext(self, index):
+        if self.cells[index] == Cell.EMPTY:
+            self.cells[index] = self.turn
+            self.turn = Cell.X if self.turn == Cell.O else Cell.O
 
 class BoardDisplay:
     def __init__(self, board, cellWidth):

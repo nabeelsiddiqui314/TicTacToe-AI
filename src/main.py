@@ -20,8 +20,8 @@ def main():
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 cellIndex = boardDisplay.getCellIndexFromPoint(event.pos)
-                if cellIndex is not None:
-                    board.cells[cellIndex] = Cell.X
+                if not board.isGameOver() and cellIndex is not None:
+                    board.playNext(cellIndex)
 
         screen.fill(background_colour)
         boardDisplay.render(screen)
