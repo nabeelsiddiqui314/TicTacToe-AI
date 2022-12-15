@@ -1,10 +1,18 @@
 import pygame
+from Board import Board, BoardDisplay, Cell
+
+board = Board()
+boardDisplay = BoardDisplay(board, 120)
 
 def main():
     pygame.init()
 
     background_colour = (0, 0, 0)
     (width, height) = (800, 600)
+
+    board.cells[0] = Cell.X
+    board.cells[4] = Cell.O
+    board.cells[8] = Cell.X
 
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Tic Tac Toe")
@@ -16,6 +24,7 @@ def main():
                 running = False
 
         screen.fill(background_colour)
+        boardDisplay.render(screen)
         pygame.display.flip()
 
     pygame.quit()
