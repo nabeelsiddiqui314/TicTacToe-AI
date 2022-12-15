@@ -10,32 +10,39 @@ class Board:
     def __init__(self):
         self.cells = [Cell.EMPTY] * 9
 
-    @staticmethod
-    def getIndex(x, y):
-        return x + y * 3
-
-    def getCell(self, x, y):
-        return self.cells[self.getIndex(x, y)]
+    def getCell(self, index):
+        return self.cells[index]
 
 class BoardDisplay:
     def __init__(self, board, cellWidth):
         self.board = board
+        self.cellWidth = cellWidth
         self.XImage = pygame.image.load("res/X.png")
         self.OImage = pygame.image.load("res/O.png")
         self.emptyImage = pygame.image.load("res/empty.png")
-        self.cellWidth = cellWidth
+        self.cellRects = []
 
-        cellSize = (cellWidth, cellWidth)
+        self.scaleImages()
+        self.initCellRects()
+
+    def scaleImages(self):
+        cellSize = (self.cellWidth, self.cellWidth)
         self.XImage = pygame.transform.smoothscale(self.XImage, cellSize)
         self.OImage = pygame.transform.smoothscale(self.OImage, cellSize)
         self.emptyImage = pygame.transform.smoothscale(self.emptyImage, cellSize)
 
-    def render(self, screen):
+    def initCellRects(self):
         for y in range(3):
             for x in range(3):
-                cell = self.board.getCell(x, y)
-                image = self.getImageForCell(cell)
-                screen.blit(image, (x * self.cellWidth, y * self.cellWidth))
+                position = (x * self.cellWidth, y * self.cellWidth)
+                size = (self.cellWidth, self.cellWidth)
+                cellRect = pygame.rect.Rect(position, size)
+                self.cellRects.append(cellRect)
+
+    def render(self, screen):
+        for cell, cellRect in zip(self.board.cells, self.cellRects):
+            image = self.getImageForCell(cell)
+            screen.blit(image, cellRect.topleft)
 
     def getImageForCell(self, cell):
         if cell == Cell.X:
