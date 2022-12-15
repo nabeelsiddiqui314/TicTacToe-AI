@@ -53,3 +53,10 @@ class BoardDisplay:
             image = self.emptyImage
 
         return image
+
+    def getCellIndexFromPoint(self, point):
+        for index, cellRect in enumerate(self.cellRects):
+            if cellRect.collidepoint(point):
+                return index
+
+        return None

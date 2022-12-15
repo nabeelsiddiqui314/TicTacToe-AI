@@ -10,10 +10,6 @@ def main():
     background_colour = (0, 0, 0)
     (width, height) = (800, 600)
 
-    board.cells[0] = Cell.X
-    board.cells[4] = Cell.O
-    board.cells[8] = Cell.X
-
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Tic Tac Toe")
 
@@ -22,6 +18,10 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                cellIndex = boardDisplay.getCellIndexFromPoint(event.pos)
+                if cellIndex is not None:
+                    board.cells[cellIndex] = Cell.X
 
         screen.fill(background_colour)
         boardDisplay.render(screen)
