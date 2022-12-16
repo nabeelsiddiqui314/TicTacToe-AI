@@ -1,8 +1,5 @@
 import pygame
-from Board import Board, BoardDisplay, Cell
-
-board = Board()
-boardDisplay = BoardDisplay(board, 120)
+from State import StateManager, GameState
 
 def main():
     pygame.init()
@@ -13,18 +10,19 @@ def main():
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Tic Tac Toe")
 
+    stateManager = StateManager(GameState())
+
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                cellIndex = boardDisplay.getCellIndexFromPoint(event.pos)
-                if not board.isGameOver() and cellIndex is not None:
-                    board.playNext(cellIndex)
+            stateManager.processEvent(event)
+
+        stateManager.update()
 
         screen.fill(background_colour)
-        boardDisplay.render(screen)
+        stateManager.render(screen)
         pygame.display.flip()
 
     pygame.quit()
