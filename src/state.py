@@ -1,6 +1,6 @@
 import pygame
 
-from Board import Board, BoardDisplay, Cell
+from board import Board, BoardDisplay, Cell
 
 class StateManager:
     def __init__(self, state):
