@@ -1,6 +1,7 @@
 import pygame
 
 from board import Board, BoardDisplay, Cell
+from player import HumanPlayer, PlayerManager
 
 class StateManager:
     def __init__(self, state):
@@ -37,15 +38,14 @@ class GameState(State):
     def __init__(self):
         self.board = Board()
         self.boardDisplay = BoardDisplay(self.board, 120)
+        self.playerManager = PlayerManager(HumanPlayer(self.boardDisplay), HumanPlayer(self.boardDisplay))
 
     def processEvent(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            cellIndex = self.boardDisplay.getCellIndexFromPoint(event.pos)
-            if not self.board.isGameOver() and cellIndex is not None:
-                self.board.playNext(cellIndex)
+        pass
 
     def update(self):
-        pass
+        if not self.board.isGameOver():
+            self.playerManager.play(self.board)
 
     def render(self, screen):
         self.boardDisplay.render(screen)
