@@ -37,7 +37,7 @@ class State:
 class GameState(State):
     def __init__(self):
         self.board = Board()
-        self.boardDisplay = BoardDisplay(self.board, 120)
+        self.boardDisplay = BoardDisplay(self.board, 120, 5)
         self.playerManager = PlayerManager(Human(self.boardDisplay), MinimaxAI())
 
     def processEvent(self, event):

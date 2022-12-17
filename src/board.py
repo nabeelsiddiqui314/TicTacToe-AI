@@ -53,9 +53,10 @@ class Board:
         self.turn = Cell.X if self.turn == Cell.O else Cell.O
 
 class BoardDisplay:
-    def __init__(self, board, cellWidth):
+    def __init__(self, board, cellWidth, spacing):
         self.board = board
         self.cellWidth = cellWidth
+        self.spacing = spacing
         self.XImage = pygame.image.load("res/X.png")
         self.OImage = pygame.image.load("res/O.png")
         self.emptyImage = pygame.image.load("res/empty.png")
@@ -71,9 +72,11 @@ class BoardDisplay:
         self.emptyImage = pygame.transform.smoothscale(self.emptyImage, cellSize)
 
     def initCellRects(self):
+        totalWidth = self.cellWidth + self.spacing
+
         for y in range(3):
             for x in range(3):
-                position = (x * self.cellWidth, y * self.cellWidth)
+                position = (x * totalWidth, y * totalWidth)
                 size = (self.cellWidth, self.cellWidth)
                 cellRect = pygame.rect.Rect(position, size)
                 self.cellRects.append(cellRect)

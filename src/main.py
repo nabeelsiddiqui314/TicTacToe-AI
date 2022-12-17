@@ -4,7 +4,7 @@ from state import StateManager, GameState
 def main():
     pygame.init()
 
-    background_colour = (0, 0, 0)
+    background_colour = (228, 217, 255)
     (width, height) = (800, 600)
 
     screen = pygame.display.set_mode((width, height))
