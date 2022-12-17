@@ -35,6 +35,9 @@ class Board:
     def isWinner(self, player):
         return any(self.checkLine(line, player) for line in self.lines)
 
+    def getEmptyCells(self):
+        return [index for index, cell in enumerate(self.cells) if cell == Cell.EMPTY]
+
     def getEmptyCellCount(self):
         return self.cells.count(Cell.EMPTY)
 

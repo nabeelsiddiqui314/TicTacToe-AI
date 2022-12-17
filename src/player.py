@@ -1,6 +1,8 @@
 from board import Cell
 import pygame
 import random
+from board import Board
+import copy
 
 class PlayerManager:
     def __init__(self, player1, player2):
@@ -41,3 +43,40 @@ class HumanPlayer(Player):
 class RandomMovePlayer(Player):
     def getMove(self, board):
         return random.randrange(9)
+
+class MinimaxPlayer(Player):
+    def getOppositePlayer(self):
+        return Cell.X if self.symbol == Cell.O else Cell.O
+
+    def getBestMove(self, board, depth = 0, maximize = True):
+        if board.isGameOver():
+            if board.isWinner(self.symbol):
+                return 10 - depth
+            elif board.isWinner(self.getOppositePlayer()):
+                return depth - 10
+            return 0
+
+        currentDepth = depth + 1
+        emptyCells = board.getEmptyCells()
+        scores = {}
+
+        for cell in emptyCells:
+            boardCopy = copy.deepcopy(board)
+            boardCopy.playNext(cell)
+            score = self.getBestMove(boardCopy, currentDepth, not maximize)
+            scores[cell] = score
+
+        if depth == 0:
+            if maximize:
+                return max(scores, key = scores.get)
+            return min(scores, key = scores.get)
+
+        if maximize:
+            return max(scores.values())
+        return min(scores.values())
+
+    def getMove(self, board):
+        if board.getEmptyCellCount() == 9:
+            return random.randrange(9)
+
+        return self.getBestMove(board)
