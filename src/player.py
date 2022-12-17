@@ -1,7 +1,6 @@
 from board import Cell
 import pygame
 import random
-from board import Board
 import copy
 
 class PlayerManager:
@@ -17,7 +16,7 @@ class PlayerManager:
         playerIndex = self.playerMap[board.turn]
         player = self.players[playerIndex]
 
-        move = player.getMove(board)
+        move = player.nextMove(board)
         if move is not None:
             board.playNext(move)
 
@@ -28,23 +27,23 @@ class Player:
     def setSymbol(self, cell):
         self.symbol = cell
 
-    def getMove(self, board):
+    def nextMove(self, board):
         pass
 
-class HumanPlayer(Player):
+class Human(Player):
     def __init__(self, boardDisplay):
         self.boardDisplay = boardDisplay
 
-    def getMove(self, board):
+    def nextMove(self, board):
         if pygame.mouse.get_pressed()[0]:
             return self.boardDisplay.getCellIndexFromPoint(pygame.mouse.get_pos())
         return None
 
-class RandomMovePlayer(Player):
-    def getMove(self, board):
+class RandomMoveMaker(Player):
+    def nextMove(self, board):
         return random.randrange(9)
 
-class MinimaxPlayer(Player):
+class MinimaxAI(Player):
     def getOppositePlayer(self):
         return Cell.X if self.symbol == Cell.O else Cell.O
 
@@ -75,7 +74,7 @@ class MinimaxPlayer(Player):
             return max(scores.values())
         return min(scores.values())
 
-    def getMove(self, board):
+    def nextMove(self, board):
         if board.getEmptyCellCount() == 9:
             return random.randrange(9)
 

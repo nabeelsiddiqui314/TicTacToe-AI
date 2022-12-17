@@ -1,7 +1,7 @@
 import pygame
 
 from board import Board, BoardDisplay, Cell
-from player import HumanPlayer, PlayerManager, MinimaxPlayer
+from player import Human, PlayerManager, MinimaxAI
 
 class StateManager:
     def __init__(self, state):
@@ -38,7 +38,7 @@ class GameState(State):
     def __init__(self):
         self.board = Board()
         self.boardDisplay = BoardDisplay(self.board, 120)
-        self.playerManager = PlayerManager(HumanPlayer(self.boardDisplay), MinimaxPlayer())
+        self.playerManager = PlayerManager(Human(self.boardDisplay), MinimaxAI())
 
     def processEvent(self, event):
         pass
