@@ -47,7 +47,10 @@ class Board:
     def playNext(self, index):
         if self.cells[index] == Cell.EMPTY:
             self.cells[index] = self.turn
-            self.turn = Cell.X if self.turn == Cell.O else Cell.O
+            self.swapTurn()
+
+    def swapTurn(self):
+        self.turn = Cell.X if self.turn == Cell.O else Cell.O
 
 class BoardDisplay:
     def __init__(self, board, cellWidth):

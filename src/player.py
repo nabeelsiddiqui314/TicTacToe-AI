@@ -1,7 +1,6 @@
 from board import Cell
 import pygame
 import random
-import copy
 
 class PlayerManager:
     def __init__(self, player1, player2):
@@ -60,9 +59,13 @@ class MinimaxAI(Player):
         scores = {}
 
         for cell in emptyCells:
-            boardCopy = copy.deepcopy(board)
-            boardCopy.playNext(cell)
-            score = self.getBestMove(boardCopy, currentDepth, not maximize)
+            board.playNext(cell)
+            score = self.getBestMove(board, currentDepth, not maximize)
+
+            # undo move
+            board.setCell(cell, Cell.EMPTY)
+            board.swapTurn()
+
             scores[cell] = score
 
         if depth == 0:
