@@ -1,5 +1,6 @@
 import enum
 import pygame
+from os.path import dirname, abspath
 
 class Cell(enum.Enum):
     EMPTY = 0
@@ -57,9 +58,12 @@ class BoardDisplay:
         self.board = board
         self.cellWidth = cellWidth
         self.spacing = spacing
-        self.XImage = pygame.image.load("res/X.png")
-        self.OImage = pygame.image.load("res/O.png")
-        self.emptyImage = pygame.image.load("res/empty.png")
+
+        resDirectory = abspath(dirname(dirname(__file__))) + "/res/"
+        self.XImage = pygame.image.load(resDirectory + "X.png")
+        self.OImage = pygame.image.load(resDirectory + "O.png")
+        self.emptyImage = pygame.image.load(resDirectory + "empty.png")
+
         self.cellRects = []
 
         self.scaleImages()
