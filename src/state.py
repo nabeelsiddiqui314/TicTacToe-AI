@@ -24,6 +24,9 @@ class State:
     def __init__(self):
         self.stateManager = None
 
+    def processEvent(self, event):
+        pass
+
     def update(self):
         pass
 
