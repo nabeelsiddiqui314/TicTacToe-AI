@@ -55,8 +55,9 @@ class Board:
         self.turn = Cell.X if self.turn == Cell.O else Cell.O
 
 class BoardDisplay:
-    def __init__(self, board, cellWidth, spacing):
+    def __init__(self, board, origin, cellWidth, spacing):
         self.board = board
+        self.origin = origin
         self.cellWidth = cellWidth
         self.spacing = spacing
 
@@ -78,10 +79,11 @@ class BoardDisplay:
 
     def arrangeButtons(self):
         totalWidth = self.cellWidth + self.spacing
+        originX, originY = self.origin
 
         for y in range(3):
             for x in range(3):
-                position = (x * totalWidth, y * totalWidth)
+                position = (x * totalWidth + originX, y * totalWidth + originY)
                 button = TexturedButton(self.emptyImage, position)
                 self.buttons.append(button)
 
