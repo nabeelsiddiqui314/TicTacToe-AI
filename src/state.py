@@ -1,7 +1,7 @@
 import pygame
 
-from board import Board, BoardDisplay, Cell
-from player import Human, PlayerManager, MinimaxAI
+from src.board import Board, BoardDisplay, Cell
+from src.player import Human, PlayerManager, MinimaxAI
 
 class StateManager:
     def __init__(self, state):

@@ -1,4 +1,4 @@
-from board import Cell
+from src.board import Cell
 import pygame
 import random
 
