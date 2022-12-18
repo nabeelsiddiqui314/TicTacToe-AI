@@ -38,7 +38,8 @@ class State:
 class GameState(State):
     def __init__(self):
         self.board = Board()
-        self.boardDisplay = BoardDisplay(self.board, (200, 100), 120, 5)
+        windowWidth, windowHeight = pygame.display.get_window_size()
+        self.boardDisplay = BoardDisplay(self.board, (windowWidth / 2, windowHeight / 2), 120, 5)
         self.playerManager = PlayerManager(Human(self.boardDisplay), MinimaxAI())
         self.font = pygame.font.Font(pygame.font.get_default_font(), 32)
         self.resultText = None
