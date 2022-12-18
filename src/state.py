@@ -37,6 +37,19 @@ class State:
     def render(self, screen):
         pass
 
+class MenuState(State):
+    def __init__(self):
+        pass
+
+    def processEvent(self, event):
+        pass
+
+    def update(self):
+        pass
+
+    def render(self, screen):
+        pass
+
 class GameState(State):
     def __init__(self):
         self.board = Board()
@@ -46,13 +59,26 @@ class GameState(State):
         self.playerManager = PlayerManager(Human(self.boardDisplay), MinimaxAI())
         self.font = pygame.font.Font(pygame.font.get_default_font(), 32)
         self.resultText = None
+        self.resetButton = None
+        self.backButton = None
+        self.initButtons()
+
+    def initButtons(self):
+        windowWidth, windowHeight = pygame.display.get_window_size()
 
         resetTexture = pygame.image.load(constants.RES_DIR + "reset.png")
         resetTexture = pygame.transform.smoothscale(resetTexture, (70, 70))
 
         resetTextureWidth, resetTextureHeight = resetTexture.get_rect().size
-        self.resetButton = TexturedButton(resetTexture, (windowWidth / 2 - resetTextureWidth / 2,
-                                                         windowHeight - resetTextureHeight))
+        self.resetButton = TexturedButton(resetTexture, (windowWidth / 1.5 - resetTextureWidth / 2,
+                                                         windowHeight - resetTextureHeight - 5))
+
+        backTexture = pygame.image.load(constants.RES_DIR + "back.png")
+        backTexture = pygame.transform.smoothscale(backTexture, (90, 70))
+
+        backTextureWidth, backTextureHeight = backTexture.get_rect().size
+        self.backButton = TexturedButton(backTexture, (windowWidth / 4 - backTextureWidth / 2,
+                                                        windowHeight - backTextureHeight - 5))
 
     def processEvent(self, event):
         pass
@@ -69,6 +95,9 @@ class GameState(State):
         if self.resetButton.isClicked():
             self.stateManager.setState(GameState())
 
+        if self.backButton.isClicked():
+            self.stateManager.setState(MenuState())
+
     def computeResult(self):
         if self.board.isWinner(Cell.X):
             return "X wins!"
@@ -80,6 +109,7 @@ class GameState(State):
     def render(self, screen):
         self.boardDisplay.render(screen)
         self.resetButton.render(screen)
+        self.backButton.render(screen)
 
         if self.resultText is not None:
             self.resultText.render(screen)
