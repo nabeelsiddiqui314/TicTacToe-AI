@@ -1,11 +1,11 @@
 import pygame
 from src.state import StateManager, GameState
 from src.gui.button import Button
+from src import constants
 
 def main():
     pygame.init()
 
-    background_colour = (228, 217, 255)
     (width, height) = (800, 600)
 
     screen = pygame.display.set_mode((width, height))
@@ -23,7 +23,7 @@ def main():
         stateManager.update()
         Button.update()
 
-        screen.fill(background_colour)
+        screen.fill(constants.BACKGROUND_COLOR)
         stateManager.render(screen)
         pygame.display.flip()
 

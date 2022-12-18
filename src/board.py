@@ -1,7 +1,7 @@
 import enum
 import pygame
-from os.path import dirname, abspath
 from src.gui.button import TexturedButton
+from src import constants
 
 class Cell(enum.Enum):
     EMPTY = 0
@@ -64,10 +64,9 @@ class BoardDisplay:
         centerX, centerY = center
         self.origin = (centerX - totalWidth / 2, centerY - totalWidth / 2)
 
-        resDirectory = abspath(dirname(dirname(__file__))) + "/res/"
-        self.XImage = pygame.image.load(resDirectory + "X.png")
-        self.OImage = pygame.image.load(resDirectory + "O.png")
-        self.emptyImage = pygame.image.load(resDirectory + "empty.png")
+        self.XImage = pygame.image.load(constants.RES_DIR + "X.png")
+        self.OImage = pygame.image.load(constants.RES_DIR + "O.png")
+        self.emptyImage = pygame.image.load(constants.RES_DIR + "empty.png")
 
         self.buttons = []
 
