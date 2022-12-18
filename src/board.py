@@ -1,6 +1,7 @@
 import enum
 import pygame
 from os.path import dirname, abspath
+from src.gui.button import TexturedButton
 
 class Cell(enum.Enum):
     EMPTY = 0
@@ -64,10 +65,10 @@ class BoardDisplay:
         self.OImage = pygame.image.load(resDirectory + "O.png")
         self.emptyImage = pygame.image.load(resDirectory + "empty.png")
 
-        self.cellRects = []
+        self.buttons = []
 
         self.scaleImages()
-        self.initCellRects()
+        self.arrangeButtons()
 
     def scaleImages(self):
         cellSize = (self.cellWidth, self.cellWidth)
@@ -75,20 +76,20 @@ class BoardDisplay:
         self.OImage = pygame.transform.smoothscale(self.OImage, cellSize)
         self.emptyImage = pygame.transform.smoothscale(self.emptyImage, cellSize)
 
-    def initCellRects(self):
+    def arrangeButtons(self):
         totalWidth = self.cellWidth + self.spacing
 
         for y in range(3):
             for x in range(3):
                 position = (x * totalWidth, y * totalWidth)
-                size = (self.cellWidth, self.cellWidth)
-                cellRect = pygame.rect.Rect(position, size)
-                self.cellRects.append(cellRect)
+                button = TexturedButton(self.emptyImage, position)
+                self.buttons.append(button)
 
     def render(self, screen):
-        for cell, cellRect in zip(self.board.cells, self.cellRects):
+        for cell, button in zip(self.board.cells, self.buttons):
             image = self.getImageForCell(cell)
-            screen.blit(image, cellRect.topleft)
+            button.setTexture(image)
+            button.render(screen)
 
     def getImageForCell(self, cell):
         if cell == Cell.X:
@@ -100,9 +101,9 @@ class BoardDisplay:
 
         return image
 
-    def getCellIndexFromPoint(self, point):
-        for index, cellRect in enumerate(self.cellRects):
-            if cellRect.collidepoint(point):
+    def getClickedCell(self):
+        for index, button in enumerate(self.buttons):
+            if button.isClicked():
                 return index
 
         return None

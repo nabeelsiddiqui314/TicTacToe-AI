@@ -1,5 +1,4 @@
 from src.board import Cell
-import pygame
 import random
 
 class PlayerManager:
@@ -34,9 +33,7 @@ class Human(Player):
         self.boardDisplay = boardDisplay
 
     def nextMove(self, board):
-        if pygame.mouse.get_pressed()[0]:
-            return self.boardDisplay.getCellIndexFromPoint(pygame.mouse.get_pos())
-        return None
+        return self.boardDisplay.getClickedCell()
 
 class RandomMoveMaker(Player):
     def nextMove(self, board):
