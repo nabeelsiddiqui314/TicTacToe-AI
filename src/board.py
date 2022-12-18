@@ -111,3 +111,7 @@ class BoardDisplay:
                 return index
 
         return None
+
+    def getBoundingRect(self):
+        size = (self.totalCellWidth * 3, self.totalCellWidth * 3)
+        return pygame.rect.Rect(self.origin, size)

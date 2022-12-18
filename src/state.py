@@ -51,7 +51,9 @@ class GameState(State):
         if not self.board.isGameOver():
             self.playerManager.play(self.board)
         elif self.resultText is None:
-            self.resultText = Text(self.computeResult(), self.font, (385, 50), (48, 52, 63))
+            windowWidth = pygame.display.get_window_size()[0]
+            boardTop = self.boardDisplay.getBoundingRect().top
+            self.resultText = Text(self.computeResult(), self.font, (windowWidth / 2, boardTop / 2), (48, 52, 63))
 
     def computeResult(self):
         if self.board.isWinner(Cell.X):
