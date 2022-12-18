@@ -3,6 +3,7 @@ import pygame
 from src.board import Board, BoardDisplay, Cell
 from src.player import Human, PlayerManager, MinimaxAI
 from src.gui.text import Text
+from src.gui.button import TexturedButton
 from src import constants
 
 class StateManager:
@@ -46,6 +47,13 @@ class GameState(State):
         self.font = pygame.font.Font(pygame.font.get_default_font(), 32)
         self.resultText = None
 
+        resetTexture = pygame.image.load(constants.RES_DIR + "reset.png")
+        resetTexture = pygame.transform.smoothscale(resetTexture, (70, 70))
+
+        resetTextureWidth, resetTextureHeight = resetTexture.get_rect().size
+        self.resetButton = TexturedButton(resetTexture, (windowWidth / 2 - resetTextureWidth / 2,
+                                                         windowHeight - resetTextureHeight))
+
     def processEvent(self, event):
         pass
 
@@ -58,6 +66,9 @@ class GameState(State):
             self.resultText = Text(self.computeResult(), self.font, (windowWidth / 2, boardTop / 2),
                                    constants.TEXT_COLOR)
 
+        if self.resetButton.isClicked():
+            self.stateManager.setState(GameState())
+
     def computeResult(self):
         if self.board.isWinner(Cell.X):
             return "X wins!"
@@ -68,5 +79,7 @@ class GameState(State):
 
     def render(self, screen):
         self.boardDisplay.render(screen)
+        self.resetButton.render(screen)
+
         if self.resultText is not None:
             self.resultText.render(screen)
