@@ -1,4 +1,5 @@
 import pygame
+from src.gui.text import Text
 
 class Button:
     clicked = False
@@ -43,3 +44,18 @@ class TexturedButton(Button):
 
     def render(self, screen):
         screen.blit(self.texture, self.position)
+
+class TextButton(Button):
+    def __init__(self, label, font, center, textColor, buttonColor, padding):
+        super().__init__()
+
+        self.text = Text(label, font, center, textColor)
+        self.buttonColor = buttonColor
+        centerX, centerY = center
+        textWidth, textHeight = self.text.getSize()
+        self.position = (centerX - textWidth / 2 - padding, centerY - textHeight / 2 - padding)
+        self.size = (textWidth + padding * 2, textHeight + padding * 2)
+
+    def render(self, screen):
+        pygame.draw.rect(screen, self.buttonColor, (self.position, self.size))
+        self.text.render(screen)

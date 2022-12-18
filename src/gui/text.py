@@ -9,8 +9,11 @@ class Text:
         self.textSurface = self.font.render(text, True, color)
 
         centerX, centerY = center
-        sizeX, sizeY = self.textSurface.get_size()
+        sizeX, sizeY = self.getSize()
         self.drawPosition = (centerX - sizeX / 2, centerY - sizeY / 2)
+
+    def getSize(self):
+        return self.textSurface.get_size()
 
     def render(self, screen):
         screen.blit(self.textSurface, self.drawPosition)
