@@ -1,5 +1,6 @@
 import pygame
 from src.state import StateManager, GameState
+from src.gui.button import Button
 
 def main():
     pygame.init()
@@ -20,6 +21,7 @@ def main():
             stateManager.processEvent(event)
 
         stateManager.update()
+        Button.update()
 
         screen.fill(background_colour)
         stateManager.render(screen)

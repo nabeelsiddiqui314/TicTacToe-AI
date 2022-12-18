@@ -1,6 +1,9 @@
 import pygame
 
 class Button:
+    clicked = False
+    clickedLastFrame = False
+
     def __init__(self, position = None):
         self.position = position
         self.size = None
@@ -10,33 +13,33 @@ class Button:
     def setPosition(self, position):
         self.position = position
 
-    def setSize(self, size):
-        self.size = size
-
     def isClicked(self):
-        return self.clicked and not self.clickedLastFrame
-
-    def update(self):
-        self.clickedLastFrame = self.clicked
-
         boundingRect = pygame.rect.Rect(self.position, self.size)
         mousePosition = pygame.mouse.get_pos()
-        isLeftPressed = pygame.mouse.get_pressed()[0]
 
-        self.clicked = boundingRect.collidepoint(mousePosition) and isLeftPressed
+        if boundingRect.collidepoint(mousePosition):
+            return Button.clicked and not Button.clickedLastFrame
+        return False
+
+    @staticmethod
+    def update():
+        Button.clickedLastFrame = Button.clicked
+        Button.clicked = pygame.mouse.get_pressed()[0]
 
     def render(self, screen):
         pass
 
 class TexturedButton(Button):
-    def __init__(self, texturePath, position = None):
+    def __init__(self, texture, position = None):
         super().__init__(position)
-        self.texture = pygame.image.load(texturePath)
-        self.size = self.texture.get_size()
+        self.texture = None
+        self.size = None
 
-    def setSize(self, size):
-        super().setSize(size)
-        self.texture = pygame.transform.smoothscale(self.texture)
+        self.setTexture(texture)
+
+    def setTexture(self, texture):
+        self.texture = texture
+        self.size = self.texture.get_size()
 
     def render(self, screen):
         screen.blit(self.texture, self.position)
