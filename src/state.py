@@ -2,6 +2,7 @@ import pygame
 
 from src.board import Board, BoardDisplay, Cell
 from src.player import Human, PlayerManager, MinimaxAI
+from src.gui.text import Text
 
 class StateManager:
     def __init__(self, state):
@@ -39,6 +40,8 @@ class GameState(State):
         self.board = Board()
         self.boardDisplay = BoardDisplay(self.board, (200, 100), 120, 5)
         self.playerManager = PlayerManager(Human(self.boardDisplay), MinimaxAI())
+        self.font = pygame.font.Font(pygame.font.get_default_font(), 32)
+        self.resultText = None
 
     def processEvent(self, event):
         pass
@@ -46,6 +49,18 @@ class GameState(State):
     def update(self):
         if not self.board.isGameOver():
             self.playerManager.play(self.board)
+        elif self.resultText is None:
+            self.resultText = Text(self.computeResult(), self.font, (385, 50), (48, 52, 63))
+
+    def computeResult(self):
+        if self.board.isWinner(Cell.X):
+            return "X wins!"
+        if self.board.isWinner(Cell.O):
+            return "O wins!"
+
+        return "Draw!"
 
     def render(self, screen):
         self.boardDisplay.render(screen)
+        if self.resultText is not None:
+            self.resultText.render(screen)
