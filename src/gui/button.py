@@ -75,3 +75,20 @@ class TextButton(Button):
 
         pygame.draw.rect(screen, color, (self.position, self.size))
         self.text.render(screen)
+
+class RadioButtonGroup:
+    def __init__(self, buttons):
+        self.buttons = buttons
+        self.selected = None
+
+    def update(self):
+        for index, button in enumerate(self.buttons):
+            if button.isClicked():
+                self.selected = index
+                break
+        if self.selected is not None:
+            self.buttons[self.selected].highlighted = True
+
+    def render(self, screen):
+        for button in self.buttons:
+            button.render(screen)
