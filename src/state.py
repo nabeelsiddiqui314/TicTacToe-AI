@@ -1,9 +1,9 @@
 import pygame
 
 from src.board import Board, BoardDisplay, Cell
-from src.player import Human, PlayerManager, MinimaxAI
+from src.player import PlayerManager, Human, MinimaxAI, RandomMoveMaker
 from src.gui.text import Text
-from src.gui.button import TexturedButton
+from src.gui.button import TexturedButton, TextButton, RadioButtonGroup
 from src import constants
 
 class StateManager:
@@ -39,16 +39,62 @@ class State:
 
 class MenuState(State):
     def __init__(self):
-        pass
+        self.titleFont = pygame.font.Font(pygame.font.get_default_font(), constants.TITLE_FONT_SIZE)
+        self.regularFont = pygame.font.Font(pygame.font.get_default_font(), constants.REGULAR_FONT_SIZE)
+        windowWidth, windowHeight = pygame.display.get_window_size()
+
+        self.title = Text("Tic Tac Toe", self.titleFont, (windowWidth / 2, windowHeight / 8), constants.TITLE_TEXT_COLOR)
+        self.subheaders = []
+        self.playerSelectors = []
+
+        self.buttonStyle = {
+            "font": self.regularFont,
+            "textColor": constants.BUTTON_TEXT_COLOR,
+            "buttonColor": constants.BUTTON_COLOR,
+            "padding": 5,
+            "highlightColor": constants.BUTTON_HIGHLIGHT_COLOR
+        }
+
+        self.createPlayerSelector(windowWidth / 4)
+        self.createPlayerSelector(windowWidth / 1.33)
+        self.playButton = TextButton("Play", center=(windowWidth / 2, windowHeight / 1.2), **self.buttonStyle)
+
+    def createPlayerSelector(self, column):
+        windowWidth, windowHeight = pygame.display.get_window_size()
+
+        playerNumber = len(self.subheaders) + 1
+        headerY = windowHeight / 4
+        header = Text("Player {0}".format(playerNumber), self.regularFont, (column, headerY), constants.TITLE_TEXT_COLOR)
+        self.subheaders.append(header)
+
+        labels = ["Human", "Random AI", "Perfect AI"]
+        buttons = []
+
+        for index, label in enumerate(labels):
+            button = TextButton(label, center=(column, headerY + 70 * (index + 1)), **self.buttonStyle)
+            buttons.append(button)
+
+        playerSelector = RadioButtonGroup(buttons)
+        self.playerSelectors.append(playerSelector)
 
     def processEvent(self, event):
         pass
 
     def update(self):
-        pass
+        for playerSelector in self.playerSelectors:
+            playerSelector.update()
 
     def render(self, screen):
-        pass
+        self.title.render(screen)
+
+        for header in self.subheaders:
+            header.render(screen)
+
+        for playerSelector in self.playerSelectors:
+            playerSelector.render(screen)
+
+        self.playButton.render(screen)
+
 
 class GameState(State):
     def __init__(self):
@@ -57,7 +103,7 @@ class GameState(State):
         self.boardDisplay = BoardDisplay(self.board, (windowWidth / 2, windowHeight / 2), constants.BOARD_CELL_WIDTH,
                                          constants.BOARD_SPACING)
         self.playerManager = PlayerManager(Human(self.boardDisplay), MinimaxAI())
-        self.font = pygame.font.Font(pygame.font.get_default_font(), 32)
+        self.font = pygame.font.Font(pygame.font.get_default_font(), constants.REGULAR_FONT_SIZE)
         self.resultText = None
         self.resetButton = None
         self.backButton = None

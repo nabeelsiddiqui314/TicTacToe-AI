@@ -1,5 +1,5 @@
 import pygame
-from src.state import StateManager, GameState
+from src.state import StateManager, MenuState
 from src.gui.button import Button
 from src import constants
 
@@ -11,7 +11,7 @@ def main():
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Tic Tac Toe")
 
-    stateManager = StateManager(GameState())
+    stateManager = StateManager(MenuState())
 
     running = True
     while running:
