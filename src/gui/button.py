@@ -10,6 +10,7 @@ class Button:
         self.size = None
         self.clicked = False
         self.clickedLastFrame = False
+        self.highlighted = False
 
     def setPosition(self, position):
         self.position = position
@@ -17,8 +18,10 @@ class Button:
     def isClicked(self):
         boundingRect = pygame.rect.Rect(self.position, self.size)
         mousePosition = pygame.mouse.get_pos()
+        isMouseInButton = boundingRect.collidepoint(mousePosition)
+        self.highlighted = isMouseInButton
 
-        if boundingRect.collidepoint(mousePosition):
+        if isMouseInButton:
             return Button.clicked and not Button.clickedLastFrame
         return False
 
@@ -31,31 +34,44 @@ class Button:
         pass
 
 class TexturedButton(Button):
-    def __init__(self, texture, position = None):
+    def __init__(self, regularTexture, position, highlightTexture = None):
         super().__init__(position)
-        self.texture = None
+        self.regularTexture = None
+        self.highlightTexture = None
         self.size = None
 
-        self.setTexture(texture)
+        self.setTexture(regularTexture, highlightTexture)
 
-    def setTexture(self, texture):
-        self.texture = texture
-        self.size = self.texture.get_size()
+    def setTexture(self, regularTexture, highlightTexture = None):
+        self.regularTexture = regularTexture
+        self.highlightTexture = highlightTexture
+        self.size = self.regularTexture.get_size()
 
     def render(self, screen):
-        screen.blit(self.texture, self.position)
+        if self.highlighted and self.highlightTexture is not None:
+            texture = self.highlightTexture
+        else:
+            texture = self.regularTexture
+
+        screen.blit(texture, self.position)
 
 class TextButton(Button):
-    def __init__(self, label, font, center, textColor, buttonColor, padding):
+    def __init__(self, label, font, center, textColor, buttonColor, padding, highlightColor = None):
         super().__init__()
 
         self.text = Text(label, font, center, textColor)
         self.buttonColor = buttonColor
+        self.highlightColor = highlightColor
         centerX, centerY = center
         textWidth, textHeight = self.text.getSize()
         self.position = (centerX - textWidth / 2 - padding, centerY - textHeight / 2 - padding)
         self.size = (textWidth + padding * 2, textHeight + padding * 2)
 
     def render(self, screen):
-        pygame.draw.rect(screen, self.buttonColor, (self.position, self.size))
+        if self.highlighted and self.highlightColor is not None:
+            color = self.highlightColor
+        else:
+            color = self.buttonColor
+
+        pygame.draw.rect(screen, color, (self.position, self.size))
         self.text.render(screen)
