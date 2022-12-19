@@ -1,7 +1,7 @@
 import pygame
 
 from src.board import Board, BoardDisplay, Cell
-from src.player import PlayerManager, Human, MinimaxAI, RandomMoveMaker
+from src.player import PlayerManager, PlayerFactory
 from src.gui.text import Text
 from src.gui.button import TexturedButton, TextButton, RadioButtonGroup
 from src import constants
@@ -84,6 +84,13 @@ class MenuState(State):
         for playerSelector in self.playerSelectors:
             playerSelector.update()
 
+        player1Button = self.playerSelectors[0].getSelectedButton()
+        player2Button = self.playerSelectors[1].getSelectedButton()
+
+        if self.playButton.isClicked():
+            if player1Button is not None and player2Button is not None:
+                self.stateManager.setState(GameState(player1Button.label, player2Button.label))
+
     def render(self, screen):
         self.title.render(screen)
 
@@ -97,12 +104,20 @@ class MenuState(State):
 
 
 class GameState(State):
-    def __init__(self):
+    def __init__(self, player1Name, player2Name):
         self.board = Board()
         windowWidth, windowHeight = pygame.display.get_window_size()
         self.boardDisplay = BoardDisplay(self.board, (windowWidth / 2, windowHeight / 2), constants.BOARD_CELL_WIDTH,
                                          constants.BOARD_SPACING)
-        self.playerManager = PlayerManager(Human(self.boardDisplay), MinimaxAI())
+
+        self.player1Name = player1Name
+        self.player2Name = player2Name
+
+        playerFactory = PlayerFactory(self.boardDisplay)
+        player1 = playerFactory.getPlayer(player1Name)
+        player2 = playerFactory.getPlayer(player2Name)
+        self.playerManager = PlayerManager(player1, player2)
+
         self.font = pygame.font.Font(pygame.font.get_default_font(), constants.REGULAR_FONT_SIZE)
         self.resultText = None
         self.resetButton = None
@@ -139,7 +154,7 @@ class GameState(State):
                                    constants.TEXT_COLOR)
 
         if self.resetButton.isClicked():
-            self.stateManager.setState(GameState())
+            self.stateManager.setState(GameState(self.player1Name, self.player2Name))
 
         if self.backButton.isClicked():
             self.stateManager.setState(MenuState())

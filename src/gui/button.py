@@ -59,6 +59,7 @@ class TextButton(Button):
     def __init__(self, label, font, center, textColor, buttonColor, padding, highlightColor = None):
         super().__init__()
 
+        self.label = label
         self.text = Text(label, font, center, textColor)
         self.buttonColor = buttonColor
         self.highlightColor = highlightColor
@@ -79,15 +80,18 @@ class TextButton(Button):
 class RadioButtonGroup:
     def __init__(self, buttons):
         self.buttons = buttons
-        self.selected = None
+        self.selectedButton = None
 
     def update(self):
-        for index, button in enumerate(self.buttons):
+        for button in self.buttons:
             if button.isClicked():
-                self.selected = index
+                self.selectedButton = button
                 break
-        if self.selected is not None:
-            self.buttons[self.selected].highlighted = True
+        if self.getSelectedButton() is not None:
+            self.selectedButton.highlighted = True
+
+    def getSelectedButton(self):
+        return self.selectedButton
 
     def render(self, screen):
         for button in self.buttons:
