@@ -28,6 +28,20 @@ class Player:
     def nextMove(self, board):
         pass
 
+class PlayerFactory:
+    def __init__(self, boardDisplay):
+        self.playerMap = {
+            "Human": lambda:  Human(boardDisplay),
+            "Random AI": RandomMoveMaker,
+            "Perfect AI": MinimaxAI
+        }
+
+    def getPlayerNames(self):
+        return self.playerMap.keys()
+
+    def getPlayer(self, name):
+        return self.playerMap[name]()
+
 class Human(Player):
     def __init__(self, boardDisplay):
         self.boardDisplay = boardDisplay
