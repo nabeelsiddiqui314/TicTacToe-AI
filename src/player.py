@@ -1,5 +1,6 @@
 from src.board import Cell
 import random
+import math
 
 class PlayerManager:
     def __init__(self, player1, player2):
@@ -57,7 +58,7 @@ class MinimaxAI(Player):
     def getOppositePlayer(self):
         return Cell.X if self.symbol == Cell.O else Cell.O
 
-    def getBestMove(self, board, depth = 0, maximize = True):
+    def getBestMove(self, board, depth = 0, maximize = True, alpha = -math.inf, beta = math.inf):
         if board.isGameOver():
             if board.isWinner(self.symbol):
                 return 10 - depth
@@ -71,13 +72,21 @@ class MinimaxAI(Player):
 
         for cell in emptyCells:
             board.playNext(cell)
-            score = self.getBestMove(board, currentDepth, not maximize)
+            score = self.getBestMove(board, currentDepth, not maximize, alpha, beta)
+            scores[cell] = score
 
             # undo move
             board.setCell(cell, Cell.EMPTY)
             board.swapTurn()
 
-            scores[cell] = score
+            if maximize:
+                alpha = max(alpha, score)
+            else:
+                beta = min(beta, score)
+
+            # prune
+            if alpha >= beta:
+                break
 
         if depth == 0:
             if maximize:
