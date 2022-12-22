@@ -1,13 +1,14 @@
+from src.board import Board
 from src.board import Cell
 import random
 import math
 
 class PlayerManager:
-    def __init__(self, player1, player2):
-        player1.setSymbol(Cell.X)
-        player2.setSymbol(Cell.O)
+    def __init__(self, playerX, playerO):
+        playerX.setSymbol(Cell.X)
+        playerO.setSymbol(Cell.O)
 
-        self.players = [player1, player2]
+        self.players = [playerX, playerO]
         self.playerMap = {Cell.X: 0,
                           Cell.O: 1}
 
@@ -55,14 +56,11 @@ class RandomMoveMaker(Player):
         return random.randrange(9)
 
 class MinimaxAI(Player):
-    def getOppositePlayer(self):
-        return Cell.X if self.symbol == Cell.O else Cell.O
-
     def getBestMove(self, board, depth = 0, maximize = True, alpha = -math.inf, beta = math.inf):
         if board.isGameOver():
             if board.isWinner(self.symbol):
                 return 10 - depth
-            elif board.isWinner(self.getOppositePlayer()):
+            elif board.isWinner(Board.getOppositePlayer(self.symbol)):
                 return depth - 10
             return 0
 

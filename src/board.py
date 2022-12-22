@@ -9,10 +9,10 @@ class Cell(enum.Enum):
     O = 2
 
 class Board:
-    def __init__(self):
+    def __init__(self, starter):
         self.cells = [Cell.EMPTY] * 9
         self.lines = []
-        self.turn = Cell.X
+        self.turn = starter
 
         self.initLines()
 
@@ -52,7 +52,11 @@ class Board:
             self.swapTurn()
 
     def swapTurn(self):
-        self.turn = Cell.X if self.turn == Cell.O else Cell.O
+        self.turn = Board.getOppositePlayer(self.turn)
+
+    @staticmethod
+    def getOppositePlayer(player):
+        return Cell.X if player == Cell.O else Cell.O
 
 class BoardDisplay:
     def __init__(self, board, center, cellWidth, spacing):

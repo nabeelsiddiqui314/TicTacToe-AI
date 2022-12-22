@@ -62,9 +62,10 @@ class MenuState(State):
     def createPlayerSelector(self, column):
         windowWidth, windowHeight = pygame.display.get_window_size()
 
-        playerNumber = len(self.subheaders) + 1
+        playerNumber = len(self.subheaders)
+        playerSymbol = "X" if playerNumber == 0 else "O"
         headerY = windowHeight / 4
-        header = Text("Player {0}".format(playerNumber), self.regularFont, (column, headerY), constants.TITLE_TEXT_COLOR)
+        header = Text("Player {0}".format(playerSymbol), self.regularFont, (column, headerY), constants.TITLE_TEXT_COLOR)
         self.subheaders.append(header)
 
         labels = ["Human", "Random AI", "Perfect AI"]
@@ -104,19 +105,20 @@ class MenuState(State):
 
 
 class GameState(State):
-    def __init__(self, player1Name, player2Name):
-        self.board = Board()
+    def __init__(self, playerXName, playerOName, starter = Cell.X):
+        self.board = Board(starter)
         windowWidth, windowHeight = pygame.display.get_window_size()
         self.boardDisplay = BoardDisplay(self.board, (windowWidth / 2, windowHeight / 2), constants.BOARD_CELL_WIDTH,
                                          constants.BOARD_SPACING)
 
-        self.player1Name = player1Name
-        self.player2Name = player2Name
+        self.playerXName = playerXName
+        self.playerOName = playerOName
+        self.starter = starter
 
         playerFactory = PlayerFactory(self.boardDisplay)
-        player1 = playerFactory.getPlayer(player1Name)
-        player2 = playerFactory.getPlayer(player2Name)
-        self.playerManager = PlayerManager(player1, player2)
+        playerX = playerFactory.getPlayer(playerXName)
+        playerO = playerFactory.getPlayer(playerOName)
+        self.playerManager = PlayerManager(playerX, playerO)
 
         self.font = pygame.font.Font(pygame.font.get_default_font(), constants.REGULAR_FONT_SIZE)
         self.resultText = None
@@ -154,7 +156,8 @@ class GameState(State):
                                    constants.TEXT_COLOR)
 
         if self.resetButton.isClicked():
-            self.stateManager.setState(GameState(self.player1Name, self.player2Name))
+            nextStarter = Board.getOppositePlayer(self.starter)
+            self.stateManager.setState(GameState(self.playerXName, self.playerOName, nextStarter))
 
         if self.backButton.isClicked():
             self.stateManager.setState(MenuState())
