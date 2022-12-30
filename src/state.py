@@ -147,7 +147,9 @@ class GameState(State):
         pass
 
     def update(self):
-        if not self.game.play() and self.resultText is None:
+        self.game.play()
+
+        if self.game.isOver() and self.resultText is None:
             windowWidth = pygame.display.get_window_size()[0]
             boardTop = self.boardDisplay.getBoundingRect().top
             self.resultText = Text(self.getResultText(), self.font, (windowWidth / 2, boardTop / 2),
@@ -169,7 +171,7 @@ class GameState(State):
             self.resultText.render(screen)
 
     def getResultText(self):
-        result = self.game.computeResult()
+        result = self.game.result
         if result == Result.WINNER_X:
             return "X wins!"
         if result == Result.WINNER_O:

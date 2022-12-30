@@ -3,23 +3,6 @@ from src.board import Cell
 import random
 import math
 
-class PlayerManager:
-    def __init__(self, playerX, playerO):
-        playerX.setSymbol(Cell.X)
-        playerO.setSymbol(Cell.O)
-
-        self.players = [playerX, playerO]
-        self.playerMap = {Cell.X: 0,
-                          Cell.O: 1}
-
-    def play(self, board):
-        playerIndex = self.playerMap[board.turn]
-        player = self.players[playerIndex]
-
-        move = player.nextMove(board)
-        if move is not None:
-            board.playNext(move)
-
 class Player:
     def __init__(self):
         self.symbol = None
