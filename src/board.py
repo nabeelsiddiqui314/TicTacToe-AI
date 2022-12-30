@@ -59,8 +59,7 @@ class Board:
         return Cell.X if player == Cell.O else Cell.O
 
 class BoardDisplay:
-    def __init__(self, board, center, cellWidth, spacing):
-        self.board = board
+    def __init__(self, center, cellWidth, spacing):
         self.cellWidth = cellWidth
         self.totalCellWidth = cellWidth + spacing
 
@@ -92,8 +91,8 @@ class BoardDisplay:
                 button = TexturedButton(self.emptyImage, position)
                 self.buttons.append(button)
 
-    def render(self, screen):
-        for cell, button in zip(self.board.cells, self.buttons):
+    def render(self, screen, board):
+        for cell, button in zip(board.cells, self.buttons):
             image = self.getImageForCell(cell)
             button.setTexture(image)
             button.render(screen)

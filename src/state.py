@@ -1,7 +1,8 @@
 import pygame
 
 from src.board import Board, BoardDisplay, Cell
-from src.player import PlayerManager, PlayerFactory
+from src.player import PlayerFactory
+from src.game import Game, Result
 from src.gui.text import Text
 from src.gui.button import TexturedButton, TextButton, RadioButtonGroup
 from src import constants
@@ -105,20 +106,19 @@ class MenuState(State):
 
 
 class GameState(State):
-    def __init__(self, playerXName, playerOName, starter = Cell.X):
-        self.board = Board(starter)
+    def __init__(self, playerXName, playerOName):
         windowWidth, windowHeight = pygame.display.get_window_size()
-        self.boardDisplay = BoardDisplay(self.board, (windowWidth / 2, windowHeight / 2), constants.BOARD_CELL_WIDTH,
+        self.boardDisplay = BoardDisplay((windowWidth / 2, windowHeight / 2), constants.BOARD_CELL_WIDTH,
                                          constants.BOARD_SPACING)
 
         self.playerXName = playerXName
         self.playerOName = playerOName
-        self.starter = starter
 
         playerFactory = PlayerFactory(self.boardDisplay)
         playerX = playerFactory.getPlayer(playerXName)
         playerO = playerFactory.getPlayer(playerOName)
-        self.playerManager = PlayerManager(playerX, playerO)
+
+        self.game = Game(playerX, playerO)
 
         self.font = pygame.font.Font(pygame.font.get_default_font(), constants.REGULAR_FONT_SIZE)
         self.resultText = None
@@ -147,33 +147,31 @@ class GameState(State):
         pass
 
     def update(self):
-        if not self.board.isGameOver():
-            self.playerManager.play(self.board)
-        elif self.resultText is None:
+        if not self.game.play() and self.resultText is None:
             windowWidth = pygame.display.get_window_size()[0]
             boardTop = self.boardDisplay.getBoundingRect().top
-            self.resultText = Text(self.computeResult(), self.font, (windowWidth / 2, boardTop / 2),
+            self.resultText = Text(self.getResultText(), self.font, (windowWidth / 2, boardTop / 2),
                                    constants.TEXT_COLOR)
 
         if self.resetButton.isClicked():
-            nextStarter = Board.getOppositePlayer(self.starter)
-            self.stateManager.setState(GameState(self.playerXName, self.playerOName, nextStarter))
+            self.game.nextRound()
+            self.resultText = None
 
         if self.backButton.isClicked():
             self.stateManager.setState(MenuState())
 
-    def computeResult(self):
-        if self.board.isWinner(Cell.X):
-            return "X wins!"
-        if self.board.isWinner(Cell.O):
-            return "O wins!"
-
-        return "Draw!"
-
     def render(self, screen):
-        self.boardDisplay.render(screen)
+        self.boardDisplay.render(screen, self.game.board)
         self.resetButton.render(screen)
         self.backButton.render(screen)
 
         if self.resultText is not None:
             self.resultText.render(screen)
+
+    def getResultText(self):
+        result = self.game.computeResult()
+        if result == Result.WINNER_X:
+            return "X wins!"
+        if result == Result.WINNER_O:
+            return "O wins!"
+        return "Draw!"
