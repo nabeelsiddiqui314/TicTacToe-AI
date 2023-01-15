@@ -124,7 +124,10 @@ class GameState(State):
         self.resultText = None
         self.resetButton = None
         self.backButton = None
+        self.XScoreText = None
+        self.OScoreText = None
         self.initButtons()
+        self.updateScoreText()
 
     def initButtons(self):
         windowWidth, windowHeight = pygame.display.get_window_size()
@@ -143,6 +146,20 @@ class GameState(State):
         self.backButton = TexturedButton(backTexture, (windowWidth / 4 - backTextureWidth / 2,
                                                         windowHeight - backTextureHeight - 5))
 
+    def updateScoreText(self):
+        textStyle = {
+            "color": constants.SCORE_TEXT_COLOR,
+            "font": self.font
+        }
+
+        windowWidth, windowHeight = pygame.display.get_window_size()
+
+        XScore = self.game.getScore(Cell.X)
+        OScore = self.game.getScore(Cell.O)
+
+        self.XScoreText = Text(f"Player X : {XScore}", center=(windowWidth / 8, windowHeight / 8), **textStyle)
+        self.OScoreText = Text(f"Player O : {OScore}", center=(windowWidth * (7 / 8), windowHeight / 8), **textStyle)
+
     def processEvent(self, event):
         pass
 
@@ -154,6 +171,7 @@ class GameState(State):
             boardTop = self.boardDisplay.getBoundingRect().top
             self.resultText = Text(self.getResultText(), self.font, (windowWidth / 2, boardTop / 2),
                                    constants.TEXT_COLOR)
+            self.updateScoreText()
 
         if self.resetButton.isClicked():
             self.game.nextRound()
@@ -169,6 +187,9 @@ class GameState(State):
 
         if self.resultText is not None:
             self.resultText.render(screen)
+
+        self.XScoreText.render(screen)
+        self.OScoreText.render(screen)
 
     def getResultText(self):
         result = self.game.result

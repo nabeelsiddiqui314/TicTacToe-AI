@@ -4,9 +4,9 @@ from src.gui.button import TexturedButton
 from src import constants
 
 class Cell(enum.Enum):
-    EMPTY = 0
-    X = 1
-    O = 2
+    X = 0
+    O = 1
+    EMPTY = 2
 
 class Board:
     def __init__(self, starter):

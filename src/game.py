@@ -12,8 +12,7 @@ class Game:
         playerO.setSymbol(Cell.O)
 
         self.players = [playerX, playerO]
-        self.playerMap = {Cell.X: 0,
-                          Cell.O: 1}
+        self.scores = [0, 0]
 
         self.starter = Cell.X
         self.board = Board(self.starter)
@@ -28,7 +27,7 @@ class Game:
 
     def play(self):
         if not self.gameOver:
-            playerIndex = self.playerMap[self.board.turn]
+            playerIndex = self.board.turn.value
             player = self.players[playerIndex]
 
             move = player.nextMove(self.board)
@@ -38,13 +37,20 @@ class Game:
                     self.gameOver = True
                     self.computeResult()
 
+    def getScore(self, player):
+        return self.scores[player.value]
+
     def isOver(self):
         return self.gameOver
 
     def computeResult(self):
             if self.board.isWinner(Cell.X):
                 self.result = Result.WINNER_X
+                playerIndex = Cell.X.value
+                self.scores[playerIndex] += 1
             elif self.board.isWinner(Cell.O):
                 self.result = Result.WINNER_O
+                playerIndex = Cell.O.value
+                self.scores[playerIndex] += 1
             else:
                 self.result = Result.DRAW
