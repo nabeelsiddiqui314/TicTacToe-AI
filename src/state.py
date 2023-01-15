@@ -173,7 +173,7 @@ class GameState(State):
                                    constants.TEXT_COLOR)
             self.updateScoreText()
 
-        if self.resetButton.isClicked():
+        if self.game.isOver() and self.resetButton.isClicked():
             self.game.nextRound()
             self.resultText = None
 
@@ -182,7 +182,9 @@ class GameState(State):
 
     def render(self, screen):
         self.boardDisplay.render(screen, self.game.board)
-        self.resetButton.render(screen)
+
+        if self.game.isOver():
+            self.resetButton.render(screen)
         self.backButton.render(screen)
 
         if self.resultText is not None:
