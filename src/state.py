@@ -136,7 +136,7 @@ class GameState(State):
         resetTexture = pygame.transform.smoothscale(resetTexture, (70, 70))
 
         resetTextureWidth, resetTextureHeight = resetTexture.get_rect().size
-        self.resetButton = TexturedButton(resetTexture, (windowWidth / 1.5 - resetTextureWidth / 2,
+        self.resetButton = TexturedButton(resetTexture, (windowWidth * (3 / 4) - resetTextureWidth / 2,
                                                          windowHeight - resetTextureHeight - 5))
 
         backTexture = pygame.image.load(constants.RES_DIR + "back.png")
