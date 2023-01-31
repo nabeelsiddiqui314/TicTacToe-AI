@@ -1,6 +1,6 @@
 import pygame
 
-from src.board import Board, BoardDisplay, Cell
+from src.board import BoardDisplay, Cell
 from src.player import PlayerFactory
 from src.game import Game, Result
 from src.gui.text import Text
